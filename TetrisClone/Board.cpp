@@ -15,7 +15,7 @@ void Board::initialize()
 	}
 	
 	score = 0;
-	if (!font.loadFromFile("BungeeInline-Regular.ttf"))
+	if (!font.loadFromFile("Fonts/BungeeInline-Regular.ttf"))
 	{
 		std::cout << "error" << std::endl;
 	}
@@ -49,6 +49,7 @@ void Board::update(sf::Event event, float& dt)
 	bool cantMoveLeft = false;
 	sf::Vector2f pos;
 	sf::Vector2i posTiles;
+
 	if (dt > 0.8f)
 	{
 		dt -= 0.8f;
@@ -64,42 +65,54 @@ void Board::update(sf::Event event, float& dt)
 	{
 		pos = m_currentTetramino.getPositionInPixelsOfaTile(i);
 		posTiles = m_currentTetramino.pixelsToTiles(pos);
-		std::cout << "pos: " << posTiles.y << std::endl;
+		//if any part of the tetramino is on X position 0 of the board it means it can't move any more to the left
 		if (posTiles.x == 0)
 			cantMoveLeft = true;
+		//if any part of the tetramino is at X position 9 it means it can't move to the right
 		if (posTiles.x == 9)
 			cantMoveRight = true;
+		//if the X position is less than the right border and the position at position + 1 is fixed
+		//the tetramino can't move right 
 		if (posTiles.x < 10 && m_board[posTiles.y][posTiles.x + 1].fixed == true)
 			cantMoveRight = true;
-		if (m_board[posTiles.y][posTiles.x - 1].fixed == true)
+		//if the X position is greater than zero and the position - 1 of the board is fixed the
+		//tetramino can't move left
+		if (posTiles.x > 0 && m_board[posTiles.y][posTiles.x - 1].fixed == true)
 			cantMoveLeft = true;
-		if (posTiles.y <= 19 && posTiles.y + 1 == 20 || m_board[posTiles.y + 1][posTiles.x].fixed == true)
+
+		//if the Y position + 1 is the size of the board  or
+		//the Block on Y position - 1 is fixed 
+		if (posTiles.y + 1 == 20 || m_board[posTiles.y + 1][posTiles.x].fixed == true)
 		{
 			canMoveDown = false;
+			//check if the current tetramino is already ready to be fixed or 
+			//it is on the bottom of the board
 			if (m_currentTetramino.getReadyToBeFixed() || posTiles.y == 19)
 			{
+				//give the player some time to move the tetramino before it gets fixed
 				if (dt > 0.4f)
 				{
 					dt -= 0.4f;
 					m_currentTetramino.setFixed();
-					std::cout << "setFixed" << std::endl;
 				}
 			}
 			else
 			{
-				std::cout << "setReadyFixed" << std::endl;
-
+				//if the current tetramino is not ready to be fixed set it to be
 				m_currentTetramino.setReadyToBeFixed();
 			}
 		}
 	}
+	//if the tetramino can be moved down and it is ready to be fixed
+	//reset it to false
 	if (canMoveDown && m_currentTetramino.getReadyToBeFixed())
 	{
-		std::cout << "reset" << std::endl;
 		m_currentTetramino.resetReadyToBeFixed();
 	}
+	//if the tetramino is not fixed
 	if (!m_currentTetramino.getFixed())
 	{
+		//check for input 
 		if (event.type == sf::Event::KeyPressed)
 		{
 			if (event.key.code == sf::Keyboard::Left && !cantMoveLeft)
@@ -118,6 +131,7 @@ void Board::update(sf::Event event, float& dt)
 				}
 			}	
 		}
+
 		for (int i = 0; i < 4; ++i)
 		{
 			pos = m_currentTetramino.getPositionInPixelsOfaTile(i);
@@ -200,7 +214,7 @@ void Board::cancellFullLine() {
 					for (j = 0; j < 10; j++)
 					{
 						m_board[i][j].fixed = m_board[i - 1][j].fixed;
-						d = true;
+						//d = true;
 					}
 				}
 			}

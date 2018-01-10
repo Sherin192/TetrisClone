@@ -37,7 +37,7 @@ class Tetramino
 		void createTetramino();
 		void setPositionInPixel();
 		int getRotation() { return m_rotation; }
-		void setFixed() { m_fixed = true; std::cout << "fixing" << std::endl; }
+		void setFixed() { m_fixed = true; }
 		bool getFixed() { return m_fixed; }
 		void setReadyToBeFixed() { m_readyToBeFixed = true; }
 		void resetReadyToBeFixed() { m_readyToBeFixed = false; }

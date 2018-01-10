@@ -214,11 +214,10 @@ void Tetramino::createTetramino()
 
 	if (!loaded)
 	{
-		std::cout << "load";
-		texture[0].loadFromFile("element_blue_square.png");
-		texture[1].loadFromFile("element_yellow_square.png");
-		texture[2].loadFromFile("element_purple_square.png");
-		texture[3].loadFromFile("element_red_square.png");
+		texture[0].loadFromFile("Images/element_blue_square.png");
+		texture[1].loadFromFile("Images/element_yellow_square.png");
+		texture[2].loadFromFile("Images/element_purple_square.png");
+		texture[3].loadFromFile("Images/element_red_square.png");
 	}
 	
 	int index = rand() % 4;
@@ -332,10 +331,8 @@ void Tetramino::move(Direction l_direction)
 }
 void Tetramino::onTick()
 {
-	std::cout << m_fixed << std::endl;
 	if (!m_fixed)
 		m_positionInTiles.y += 1;
-	std::cout << m_positionInTiles.y << std::endl;
 }
 void Tetramino::rotate() {
 	m_rotation = (m_rotation + 1) % 4;
